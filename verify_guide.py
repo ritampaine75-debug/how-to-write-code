@@ -181,8 +181,8 @@ for href in re.findall(r"\]\(#([a-z0-9-]+)\)", readme):
     check(f"anchor #{href}", href in anchors)
 
 # ---------- 3. SEO / HTML validation ----------
-print("\n== SEO page (site/index.html) ==")
-html = (ROOT / "site/index.html").read_text(encoding="utf-8")
+print("\n== SEO page (index.html) ==")
+html = (ROOT / "index.html").read_text(encoding="utf-8")
 
 
 class Checker(HTMLParser):
@@ -219,6 +219,9 @@ check("meta description 50-160 chars", 50 <= len(desc) <= 160, f"{len(desc)} cha
 check("primary keyword 'how to write code' in title", "how to write code" in title.lower())
 check("primary keyword in meta description", "how to write code" in desc.lower())
 check("canonical URL set", 'rel="canonical"' in html)
+PAGES_URL = "https://ritampaine75-debug.github.io/how-to-write-code/"
+check("canonical matches the GitHub Pages URL", f'href="{PAGES_URL}"' in html)
+check("og:url matches canonical", f'content="{PAGES_URL}"' in html)
 check("Open Graph tags set", 'property="og:title"' in html and 'property="og:description"' in html)
 check("exactly one <h1>", html.count("<h1>") == 1, f"{html.count('<h1>')} found")
 check("viewport meta set", 'name="viewport"' in html)
@@ -255,7 +258,7 @@ check("HTML FAQ matches FAQPage schema", html_questions == schema_questions,
 # ---------- 4. sitemap / robots ----------
 print("\n== sitemap.xml and robots.txt ==")
 try:
-    tree = ET.parse(ROOT / "site/sitemap.xml")
+    tree = ET.parse(ROOT / "sitemap.xml")
     urls = tree.getroot()
     check("sitemap.xml is well-formed XML", True, f"{len(urls)} urls")
     locs = [e.text for u in urls for e in u if e.tag.endswith("loc")]
@@ -263,9 +266,10 @@ try:
 except ET.ParseError as exc:
     check("sitemap.xml is well-formed XML", False, str(exc))
 
-robots = (ROOT / "site/robots.txt").read_text(encoding="utf-8")
+robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
 check("robots.txt allows crawling", "User-agent: *" in robots and "Allow: /" in robots)
 check("robots.txt points to sitemap", "Sitemap:" in robots)
+check("robots.txt sitemap URL matches Pages URL", f"Sitemap: {PAGES_URL}sitemap.xml" in robots)
 
 # ---------- 5. repo hygiene ----------
 print("\n== Repo hygiene ==")

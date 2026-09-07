@@ -380,6 +380,8 @@ Something small and finished: a to-do list, a currency converter, a password gen
 
 ## Further reading
 
+**Read the guide as a web page:** [https://ritampaine75-debug.github.io/how-to-write-code/](https://ritampaine75-debug.github.io/how-to-write-code/) — the same content, served as a searchable web page (source: [`index.html`](index.html)).
+
 - [Step-by-step: writing your first Python program](docs/01-first-python-program.md)
 - [Variables, data types and operators explained](docs/02-variables-and-data-types.md)
 - [Conditions and loops: controlling program flow](docs/03-conditions-and-loops.md)
